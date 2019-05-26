@@ -48,10 +48,15 @@ class WebSocketOutputStream extends FilterOutputStream
         byte[] maskingKey = Misc.nextBytes(4);
 
         // Write the masking key.
-        write(maskingKey);
+        if (WebSocket.useMask) {
+            byte[] maskingKey = Misc.nextBytes(4);
+            write(maskingKey);
 
-        // Write the payload.
-        writeFramePayload(frame, maskingKey);
+            // Write the payload.
+            writeFramePayload(frame, maskingKey);
+        } else {
+            writeFramePayload(frame, null);
+        }
     }
 
 
@@ -70,7 +75,12 @@ class WebSocketOutputStream extends FilterOutputStream
     private void writeFrame1(WebSocketFrame frame) throws IOException
     {
         // Frames sent from a client are always masked.
-        int b = 0x80;
+        int b;
+        if (WebSocket.useMask) {
+            b = 0x80;
+        } else {
+            b = 0x00;
+        }
 
         int len = frame.getPayloadLength();
 
@@ -133,7 +143,12 @@ class WebSocketOutputStream extends FilterOutputStream
         for (int i = 0; i < payload.length; ++i)
         {
             // Mask
-            int b = (payload[i] ^ maskingKey[i % 4]) & 0xFF;
+            int b;
+            if (WebSocket.useMask) {
+                b = (payload[i] ^ maskingKey[i % 4]) & 0xFF;
+            } else {
+                b = (payload[i]) & 0xFF;
+            }
 
             // Write
             write(b);
