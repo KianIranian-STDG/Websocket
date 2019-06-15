@@ -143,12 +143,7 @@ class WebSocketOutputStream extends FilterOutputStream
         for (int i = 0; i < payload.length; ++i)
         {
             // Mask
-            int b;
-            if (WebSocket.useMask) {
-                b = (payload[i] ^ maskingKey[i % 4]) & 0xFF;
-            } else {
-                b = (payload[i]) & 0xFF;
-            }
+            int b = (payload[i] ^ maskingKey[i % 4]) & 0xFF;
 
             // Write
             write(b);
