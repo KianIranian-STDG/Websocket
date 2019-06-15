@@ -75,12 +75,7 @@ class WebSocketOutputStream extends FilterOutputStream
     private void writeFrame1(WebSocketFrame frame) throws IOException
     {
         // Frames sent from a client are always masked.
-        int b;
-        if (WebSocket.useMask) {
-            b = 0x80;
-        } else {
-            b = 0x00;
-        }
+        int b = 0x80;
 
         int len = frame.getPayloadLength();
 
