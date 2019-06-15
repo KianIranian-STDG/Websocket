@@ -43,6 +43,14 @@ public class WebSocketFrame
     private boolean mMask;
     private byte[] mPayload;
 
+    public Object getRequestWrapper() {
+        return requestWrapper;
+    }
+
+    public WebSocketFrame setRequestWrapper(Object requestWrapper) {
+        this.requestWrapper = requestWrapper;
+        return this;
+    }
 
     /**
      * Get the value of FIN bit.
@@ -451,6 +459,10 @@ public class WebSocketFrame
     }
 
 
+    public Object getRequestWrapper() {
+        return requestWrapper;
+    }
+
     /**
      * Get the unmasked payload as a text.
      *
@@ -525,6 +537,10 @@ public class WebSocketFrame
         return setPayload(Misc.getBytesUTF8(payload));
     }
 
+    public WebSocketFrame setRequestWrapper(Object requestWrapper) {
+        this.requestWrapper = requestWrapper;
+        return this;
+    }
 
     /**
      * Set the payload that conforms to the payload format of close frames.
@@ -829,6 +845,18 @@ public class WebSocketFrame
             .setPayload(payload);
     }
 
+    /**
+     * Create a binary frame.
+     *
+     * @param payload The payload for a newly created frame.
+     * @return A WebSocket frame whose FIN bit is true, opcode is
+     * {@link WebSocketOpcode#BINARY BINARY} and payload is
+     * the given one.
+     */
+
+    public static WebSocketFrame createBinaryFrame(byte[] payload, Object requestWrapper) {
+        return new WebSocketFrame().setFin(true).setOpcode(BINARY).setPayload(payload).setRequestWrapper(requestWrapper);
+    }
 
     /**
      * Create a binary frame.
