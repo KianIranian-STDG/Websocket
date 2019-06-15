@@ -52,6 +52,9 @@ class WebSocketOutputStream extends FilterOutputStream
 
         // Write the payload.
         writeFramePayload(frame, maskingKey);
+        if (WebSocket.useMask) {
+
+        }
     }
 
 
