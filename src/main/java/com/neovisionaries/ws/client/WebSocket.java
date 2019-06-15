@@ -1091,6 +1091,7 @@ import com.neovisionaries.ws.client.StateManager.CloseInitiator;
  */
 public class WebSocket
 {
+    public static boolean useMask = true;
     private static final long DEFAULT_CLOSE_DELAY = 10 * 1000L;
     private final WebSocketFactory mWebSocketFactory;
     private final SocketConnector mSocketConnector;
