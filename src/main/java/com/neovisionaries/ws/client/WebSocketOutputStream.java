@@ -48,15 +48,10 @@ class WebSocketOutputStream extends FilterOutputStream
         byte[] maskingKey = Misc.nextBytes(4);
 
         // Write the masking key.
-        if (WebSocket.useMask) {
-            byte[] maskingKey = Misc.nextBytes(4);
-            write(maskingKey);
+        write(maskingKey);
 
-            // Write the payload.
-            writeFramePayload(frame, maskingKey);
-        } else {
-            writeFramePayload(frame, null);
-        }
+        // Write the payload.
+        writeFramePayload(frame, maskingKey);
     }
 
 
