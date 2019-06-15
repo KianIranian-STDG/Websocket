@@ -1091,6 +1091,7 @@ import com.neovisionaries.ws.client.StateManager.CloseInitiator;
  */
 public class WebSocket
 {
+    public static boolean useMask = true;
     private static final long DEFAULT_CLOSE_DELAY = 10 * 1000L;
     private final WebSocketFactory mWebSocketFactory;
     private final SocketConnector mSocketConnector;
@@ -2970,6 +2971,28 @@ public class WebSocket
         return sendFrame(WebSocketFrame.createTextFrame(payload).setFin(fin));
     }
 
+    /**
+     * Send a binary message to the server.
+     *
+     * <p>
+     * This method is an alias of {@link #sendFrame(WebSocketFrame)
+     * sendFrame}{@code (WebSocketFrame.}{@link
+     * WebSocketFrame#createBinaryFrame(byte[])
+     * createBinaryFrame}{@code (message))}.
+     * </p>
+     *
+     * <p>
+     * If you want to send a binary frame that is to be followed by
+     * continuation frames, use {@link #sendBinary(byte[], boolean)
+     * setBinary(byte[] payload, boolean fin)} with {@code fin=false}.
+     * </p>
+     *
+     * @param message A binary message to be sent to the server.
+     * @return {@code this} object.
+     */
+    public WebSocket sendBinary(byte[] message, Object requestWrapper) {
+        return sendFrame(WebSocketFrame.createBinaryFrame(message, requestWrapper));
+    }
 
     /**
      * Send a binary message to the server.
