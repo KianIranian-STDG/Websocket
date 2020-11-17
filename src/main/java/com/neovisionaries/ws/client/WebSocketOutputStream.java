@@ -35,22 +35,22 @@ class WebSocketOutputStream extends FilterOutputStream {
     }
 
 
-    public void write(WebSocketFrame frame) throws IOException {
+    public void write(WebSocketFrame frame, boolean useMask) throws IOException {
         writeFrame0(frame);
-        writeFrame1(frame);
+        writeFrame1(frame, useMask);
         writeFrameExtendedPayloadLength(frame);
 
         // Generate a random masking key.
 
         // Write the masking key.
-        if (WebSocket.useMask) {
+        if (useMask) {
             byte[] maskingKey = Misc.nextBytes(4);
             write(maskingKey);
 
             // Write the payload.
-            writeFramePayload(frame, maskingKey);
+            writeFramePayload(frame, maskingKey, true);
         } else {
-            writeFramePayload(frame, null);
+            writeFramePayload(frame, null, false);
         }
     }
 
@@ -62,10 +62,10 @@ class WebSocketOutputStream extends FilterOutputStream {
     }
 
 
-    private void writeFrame1(WebSocketFrame frame) throws IOException {
+    private void writeFrame1(WebSocketFrame frame, boolean useMask) throws IOException {
         // Frames sent from a client are always masked.
         int b;
-        if (WebSocket.useMask) {
+        if (useMask) {
             b = 0x80;
         } else {
             b = 0x00;
@@ -112,7 +112,7 @@ class WebSocketOutputStream extends FilterOutputStream {
     }
 
 
-    private void writeFramePayload(WebSocketFrame frame, byte[] maskingKey) throws IOException {
+    private void writeFramePayload(WebSocketFrame frame, byte[] maskingKey, boolean useMask) throws IOException {
         byte[] payload = frame.getPayload();
 
         if (payload == null) {
@@ -122,7 +122,7 @@ class WebSocketOutputStream extends FilterOutputStream {
         for (int i = 0; i < payload.length; ++i) {
             // Mask
             int b;
-            if (WebSocket.useMask) {
+            if (useMask) {
                 b = (payload[i] ^ maskingKey[i % 4]) & 0xFF;
             } else {
                 b = (payload[i]) & 0xFF;

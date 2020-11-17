@@ -17,6 +17,7 @@ package com.neovisionaries.ws.client;
 
 
 import com.neovisionaries.ws.client.StateManager.CloseInitiator;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -1046,7 +1047,7 @@ import static com.neovisionaries.ws.client.WebSocketState.OPEN;
  */
 public class WebSocket {
     //public static boolean isSecure;
-    public static boolean useMask = true;
+    private boolean useMask = true;
     private static final long DEFAULT_CLOSE_DELAY = 10 * 1000L;
     private final WebSocketFactory mWebSocketFactory;
     private final SocketConnector mSocketConnector;
@@ -3165,5 +3166,13 @@ public class WebSocket {
      */
     PerMessageCompressionExtension getPerMessageCompressionExtension() {
         return mPerMessageCompressionExtension;
+    }
+
+    public void setUseMask(boolean useMask) {
+        this.useMask = useMask;
+    }
+
+    public boolean isUseMask() {
+        return useMask;
     }
 }
